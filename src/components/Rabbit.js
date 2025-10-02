@@ -1,10 +1,10 @@
 import React from 'react'
-import '../assets/rabbit-sit.png'
+import rabbitSit from '../assets/rabbit-sit.png'
 
-const Rabbit = () => {
+const Rabbit = (props) => {
   return (
     <div>
-      <img src={require('../assets/rabbit-sit.png')} alt="Rabbit Sitting" />
+      <img src={rabbitSit} style={{ position: 'absolute', left: props.x, top: props.y, height:60, width:60, zIndex:-1 }} alt="Rabbit Sitting" />
     </div>
   )
 }
