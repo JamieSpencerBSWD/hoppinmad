@@ -5,7 +5,6 @@ const HomePage = () => {
   const [rabbitSize, setRabbitSize] = useState(60);
   const [rabbits, setRabbits] = useState([])
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [deleteRabbit, setDeleteRabbit] = useState(false);
 
   const handleMouseMove = (event) => {
     setMousePosition({
@@ -14,17 +13,11 @@ const HomePage = () => {
     });
   };
   const handleClick = (event, id) => {
-    if (deleteRabbit) {
-      console.log("despawning rabbit " + id)
-      deSpawnSelectedRabbit(id);
-    } else {
-      spawnRabbitsAtMousePointer();
-    }
+    spawnRabbitsAtMousePointer();
   }
   const spawnRabbitsAtMousePointer = () => {
     //fetch rabbit data from backend
-    setRabbits(rabbits => [...rabbits, {id: rabbits.length+1, xaxis: mousePosition.x-rabbitSize/2, yaxis: mousePosition.y-rabbitSize/2}]);
-    console.log(rabbits)
+    setRabbits(rabbits => [...rabbits, {id: rabbits.length, xaxis: mousePosition.x-rabbitSize/2, yaxis: mousePosition.y-rabbitSize/2}]);
   };
 
   const spawnRabbitsRandomly = () => {
@@ -37,13 +30,13 @@ const HomePage = () => {
     const tempRabbits = rabbits.slice(0, -1); 
     setRabbits(tempRabbits);
   };
+  const deSpawnAllRabbits =() => {
+    setRabbits([]);
+  }
   const deSpawnSelectedRabbit = (id) => {
     console.log("despawning rabbit " + id)
     //fetch rabbit data from backend
-    //const tempRabbits = rabbits.slice(0, -1); 
-    //setRabbits(tempRabbits);
     setRabbits(prevRabbits => prevRabbits.filter(rabbit => rabbit.id !== id));
-    console.log(id)
   };
 
   useEffect(() => {
@@ -57,8 +50,10 @@ const HomePage = () => {
   return (
     <div onClick={handleClick} style={{height: '100vh', width: '100vw', overflow: 'hidden', position: 'relative'}}>
       <h1>Home Page</h1>
+      <button onClick={(e) => { e.stopPropagation(); spawnRabbitsRandomly(); }} style={{margin:'20px'}}>Spawn Randomly</button>
       <button onClick={(e) => { e.stopPropagation(); deSpawnLastRabbit(); }} style={{margin:'20px'}}>Despawn Last Rabbit</button>
-      <button onClick={(e) => {e.stopPropagation(); setDeleteRabbit(!deleteRabbit)}} style={{margin:'20px'}}>Toggle Delete Mode: {deleteRabbit ? "ON" : "OFF"}</button>
+      
+      <button onClick={(e) => { e.stopPropagation(); deSpawnAllRabbits(); }} style={{margin:'20px'}}>Despawn All Rabbits</button>
       {rabbits.map(rabbit => (
           <Rabbit key={rabbit.id} id={rabbit.id} x={rabbit.xaxis} y={rabbit.yaxis} onRemove={deSpawnSelectedRabbit}/>
       ))}
