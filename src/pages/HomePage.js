@@ -44,7 +44,7 @@ const HomePage = () => {
 
   useEffect(() => {
     if (!spawning) return;
-    const intervalId = setInterval(spawnRabbitsRandomly, 1000); // spawn every 1s
+    const intervalId = setInterval(spawnRabbitsRandomly, 300); // spawn every 1s
     return () => clearInterval(intervalId);
   }, [spawning]);
 
@@ -62,7 +62,7 @@ const HomePage = () => {
       <div>
         <button onClick={(e) => { e.stopPropagation(); setSpawning(!spawning); spawnRabbitsRandomly();}} style={{margin:'20px', zIndex:2}}>{spawning ? "Stop " : "Start "}Spawning</button>
         <button onClick={(e) => { e.stopPropagation(); deSpawnLastRabbit(); }} style={{margin:'20px', zIndex:2}}>Despawn Last Rabbit</button>
-        <button onClick={(e) => { e.stopPropagation(); deSpawnAllRabbits(); }} style={{margin:'20px', zIndex:2}}>Despawn All Rabbits</button>
+        <button onClick={(e) => { e.stopPropagation(); deSpawnAllRabbits(); }} style={{margin:'20px', zIndex:2, position:'absolute'}}>Despawn All Rabbits</button>
       </div>
       
       {rabbits.map(rabbit => (
