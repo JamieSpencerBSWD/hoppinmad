@@ -1,9 +1,9 @@
 import React from 'react'
 
-const CreateAnimal = () => {
+const CreateRabbit = () => {
   return (
     <div>CreateAnimal</div>
   )
 }
 
-export default CreateAnimal
+export default CreateRabbit
