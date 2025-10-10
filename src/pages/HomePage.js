@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
 import Rabbit from '../components/Rabbit';
-import { Engine, Render, Runner, Bodies, Composite } from "matter-js";
 
 const HomePage = () => {
   const [rabbitSize, setRabbitSize] = useState(60);
@@ -8,31 +7,6 @@ const HomePage = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [spawning, setSpawning] = useState(false);
   const nextId = useRef(0);
-
-  useEffect(() => {
-    const engine = Engine.create();
-    const world = engine.world;
-
-    // example rabbit body
-    const rabbitBody = Bodies.circle(200, 200, rabbitSize / 2, { restitution: 0.8 });
-    Composite.add(world, rabbitBody);
-
-    const runner = Runner.create();
-    Runner.run(runner, engine);
-
-    // each frame, update React state
-    const update = () => {
-      setRabbits([{ id: 0, xaxis: rabbitBody.position.x, yaxis: rabbitBody.position.y }]);
-      requestAnimationFrame(update);
-    };
-    update();
-
-    return () => {
-      Runner.stop(runner);
-    };
-  }, []);
-
-
 
   const handleMouseMove = (event) => {
     setMousePosition({
