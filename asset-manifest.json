@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/hoppinmad/static/css/main.2bea1171.css",
-    "main.js": "/hoppinmad/static/js/main.838f40e0.js",
+    "main.js": "/hoppinmad/static/js/main.e9ce0406.js",
     "static/js/453.3cf2b73e.chunk.js": "/hoppinmad/static/js/453.3cf2b73e.chunk.js",
-    "static/media/RabbitTemplate.png": "/hoppinmad/static/media/RabbitTemplate.06d892037bd9c5e874ce.png",
+    "static/media/rabbit-sit.png": "/hoppinmad/static/media/rabbit-sit.9d015ce648cfc508ecf2.png",
     "index.html": "/hoppinmad/index.html",
     "main.2bea1171.css.map": "/hoppinmad/static/css/main.2bea1171.css.map",
-    "main.838f40e0.js.map": "/hoppinmad/static/js/main.838f40e0.js.map",
+    "main.e9ce0406.js.map": "/hoppinmad/static/js/main.e9ce0406.js.map",
     "453.3cf2b73e.chunk.js.map": "/hoppinmad/static/js/453.3cf2b73e.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.2bea1171.css",
-    "static/js/main.838f40e0.js"
+    "static/js/main.e9ce0406.js"
   ]
 }
