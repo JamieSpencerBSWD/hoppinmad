@@ -1,5 +1,5 @@
 import React from 'react'
-import rabbitSit from '../assets/RabbitTemplate.png'
+import rabbitSit from '../assets/rabbit-sit.png'
 
 const Rabbit = (props) => {
   return (
