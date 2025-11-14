@@ -48,6 +48,7 @@ onMounted(() => {
 
       // if we're not at the bottom of the screen...
       if(bottom < containerBottom){
+        //Update Animation Frame or PNG to show Falling State
           rabbitState.value="FALLING"
           // ...increase the distance we've fallen...
           distance.value += fallSpeed.value;
