@@ -29,78 +29,119 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  mousePosition: {
+    type: Object,
+    required: false,
+  },
 })
+
+const emit = defineEmits(['updatePosition'])
 
 const rabbitRef = ref(null)
-const fallSpeed = ref(2) // how fast we fall
-const distance = ref(0)
+const fallSpeed = ref(props.dragged?0:2) // how fast we fall
 const rabbitState = ref('')
-const rabbitIMG = ref('')
+// const rabbitIMG = ref('')
 
-const posX = ref()
-const posY = ref()
+// current X and Y position of rabbit component
+const yPosition = ref(props.positionY)
+const xPosition = ref(props.positionX)
 
-watch(
-  () => props.dragged,
-  (newValue) => {
-    //When mouse is Down/dragged = true, set Fall Speed to 0, so no gravity is applied
-    //if dragged is False, set speed back to 8
-    rabbitState.value = 'DRAGGING'
-    newValue == true ? (fallSpeed.value = 0) : (fallSpeed.value = 2)
-    //update Rabbit Position to be where the mouse is, at all times
-    moveRabbit()
-  },
-)
-//Make Rabbit Interactable, and able to be dragged. Keep track of STATE (dragged, falling, jumping, sleeping, etc) in a ref attribute,
-// and update the bottom to say what state is
-const moveRabbit = () => {
-  console.log(props.positionX, props.positionY)
-  //Handle Logic for moving rabbit around / having rabbit follow mouse in here
-}
-onMounted(() => {
-  const gravity = () => {
-    const element = rabbitRef.value
-    const tick = () => {
-      //get parent Div
-      const container = element.offsetParent
-      //if no parent div, return
-      if (!container) {
-        return
-      }
-      // get the height of the window
-      const containerRect = container.getBoundingClientRect()
-      const containerBottom = containerRect.bottom
-
-      // get the position of the bottom of the element on the screen
-      const { bottom } = element.getBoundingClientRect()
-      // if we're not at the bottom of the screen...
-      if (bottom < containerBottom) {
-        //Update Animation Frame or PNG to show Falling State
-        if (props.dragged != true) {
-          rabbitState.value = 'FALLING'
-        }
-        // ...increase the distance we've fallen...
-        distance.value += fallSpeed.value
-        // ...apply the fallen distance to the element...
-        element.style.transform = `translateY(${distance.value}px)`
-        // Update the Position X and Y properties in the component
-
-        //these two just keep track of the current position of the component, so that we may see it
-        posX.value = element.getBoundingClientRect().left
-        posY.value = element.getBoundingClientRect().top
-        // ...and queue up the next frame to do it all again
-        requestAnimationFrame(tick)
-      } else {
-        rabbitState.value = 'IDLE'
-      }
-      rabbitIMG.value = '/rabbit' + rabbitState.value + '.png'
+const gravity = () => {
+  const rabbitElement = rabbitRef.value
+  const tick = () => {
+    // get parent Div, relative to what the element referencing the RabbitElement is
+    const container = rabbitElement.offsetParent
+    //if no parent div, stop gravity
+    if (!container) {
+      return
     }
-    requestAnimationFrame(tick)
+    // get the height of the window
+    const containerRect = container.getBoundingClientRect()
+    const containerBottom = containerRect.bottom
+
+    // get the position of the bottom of the element on the screen
+    const { bottom } = rabbitElement.getBoundingClientRect()
+    // if we're not at the bottom of the screen
+    if (bottom < containerBottom) {
+      //Update Animation Frame or PNG to show Falling State
+      if (props.dragged != true) {
+        rabbitState.value = 'FALLING'
+      }
+      // and increase the distance fallen (only on Y axis)
+
+      // comp falling faster if the mouse is moving, or if were dragging could have something to do with this
+      yPosition.value += fallSpeed.value
+
+      // update the Position X and Y properties in the component
+      updatePosition()
+      // request Tick to rechect gravity again (continuous loop)
+
+      requestAnimationFrame(tick)
+    } else {
+      rabbitState.value = 'IDLE'
+    }
+    // Update IMG to point to whatever the state variable is
+    // rabbitIMG.value = '/rabbit' + rabbitState.value + '.gif'
   }
+  requestAnimationFrame(tick)
+  
+}
+
+onMounted(() => {
   gravity()
 })
-//handle state for rabbit here. If rabbit is interacted with,
-//  pass whatever is interacted with through properties
+
+
+
+watch(
+  // watches Props.Dragged, MousePosition X, and MousePosition Y
+  () => [props.dragged, props.mousePosition.x, props.mousePosition.y],
+  ([dragged]) => {
+    // if we are dragging the mouse
+    if (dragged) {
+      
+      // Rabbit follows mouse
+      // IF WE HAVE MOUSE POSITION PASSED
+      if (props.mousePosition) {
+        // Set fallSpeed to 0, and state to DRAGGING
+        console.log('DRAGGING!!!')
+        rabbitState.value = 'DRAGGING'
+        // Set x and y position of rabbit to x and y position of mouse
+        xPosition.value = props.mousePosition.x - props.imgWidth / 2
+        yPosition.value = props.mousePosition.y - props.imgHeight / 2
+      }
+      // Otherwise, resume gravity / set fallSpeed back to 2
+      updatePosition()
+      
+    } else {
+      // Reset state to Falling or Idle and call Gravity once again
+
+      // Maybe find a way to always be calling the Gravity function? unsure.
+      gravity()
+      
+    }
+    
+  },
+)
+
+//TODO
+// Make Rabbit Interactable, and able to be dragged. Keep track of STATE (dragged, falling, jumping, sleeping, etc) in a ref attribute,
+// and update the bottom to say what state is
+
+// Updates the position of the rabbit component, and passes it through to the parent component
+const updatePosition = () => {
+  // emits rabbits position so parent component can see it in the browser
+  emit('updatePosition', {
+    id: props.id,
+    x: xPosition.value,
+    y: yPosition.value,
+  })
+}
+
+
+// handle state for rabbit here? If rabbit is interacted with,
+//  pass whatever is interacted with through properties/emission.
+// i.e. if user interacts with Rabbit component with Carrot, pass interaction via props, and execute whatever will happen
 </script>
 
 <template>
@@ -108,18 +149,15 @@ onMounted(() => {
     class="rabbit"
     ref="rabbitRef"
     :style="{
-      left: props.positionX + 'px',
-      top: props.positionY + 'px',
-      // left: props.positionX  - props.imgWidth / 2 + 'px',
-      // top: props.positionY  - props.imgHeight / 2 + 'px',
+      left: xPosition + 'px',
+      top: yPosition + 'px',
     }"
   >
-    <div style="height: 60px; width: 60px; background-color: green;">
+    <div>
+      <p>{{ rabbitState }}</p>
       <!-- Change so Style (rotate 45 deg) is applied when in FALLING state, and rotate(0deg) is applied when in IDLE state -->
       <!-- <img src="/rabbit-sit.png" style="height: 60px; width: 60px" /> -->
     </div>
-    <div>({{ dragged }}) - {{ rabbitState }}</div>
-    <p>{{ posX }}, {{ posY }}</p>
   </div>
 </template>
 
