@@ -97,9 +97,9 @@ watch(
   // watches Props.Dragged, MousePosition X, and MousePosition Y
   () => [props.dragged, props.mousePosition.x, props.mousePosition.y],
   ([dragged]) => {
+    console.log(fallSpeed.value)
     // if we are dragging the mouse
     if (dragged) {
-      
       // Rabbit follows mouse
       // IF WE HAVE MOUSE POSITION PASSED
       if (props.mousePosition) {
@@ -115,10 +115,8 @@ watch(
       
     } else {
       // Reset state to Falling or Idle and call Gravity once again
-
-      // Maybe find a way to always be calling the Gravity function? unsure.
+      // Maybe find a way to always be calling the Gravity function? unsure. This works for now.
       gravity()
-      
     }
     
   },
