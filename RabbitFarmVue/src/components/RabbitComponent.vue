@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, watch } from 'vue'
 const props = defineProps({
   id: {
     type: Number,
@@ -38,87 +38,59 @@ const props = defineProps({
 const emit = defineEmits(['updatePosition'])
 
 const rabbitRef = ref(null)
-const fallSpeed = ref(props.dragged?0:2) // how fast we fall
+const fallSpeed = ref(props.dragged ? 0 : 2) // how fast we fall
 const rabbitState = ref('')
-// const rabbitIMG = ref('')
+const rabbitIMG = ref('')
 
-// current X and Y position of rabbit component
-const yPosition = ref(props.positionY)
-const xPosition = ref(props.positionX)
+//MOVE TICK/GRAVITY INTO PARENT
 
-const gravity = () => {
-  const rabbitElement = rabbitRef.value
-  const tick = () => {
-    // get parent Div, relative to what the element referencing the RabbitElement is
-    const container = rabbitElement.offsetParent
-    //if no parent div, stop gravity
-    if (!container) {
-      return
-    }
-    // get the height of the window
-    const containerRect = container.getBoundingClientRect()
-    const containerBottom = containerRect.bottom
-
-    // get the position of the bottom of the element on the screen
-    const { bottom } = rabbitElement.getBoundingClientRect()
-    // if we're not at the bottom of the screen
-    if (bottom < containerBottom) {
-      //Update Animation Frame or PNG to show Falling State
-      if (props.dragged != true) {
-        rabbitState.value = 'FALLING'
-      }
-      // and increase the distance fallen (only on Y axis)
-
-      // comp falling faster if the mouse is moving, or if were dragging could have something to do with this
-      yPosition.value += fallSpeed.value
-
-      // update the Position X and Y properties in the component
-      updatePosition()
-      // request Tick to rechect gravity again (continuous loop)
-
-      requestAnimationFrame(tick)
-    } else {
-      rabbitState.value = 'IDLE'
-    }
-    // Update IMG to point to whatever the state variable is
-    // rabbitIMG.value = '/rabbit' + rabbitState.value + '.gif'
-  }
+//we know the coords of the rabbit, we dont need refsss
+const tick = () => {
   requestAnimationFrame(tick)
-  
+  const containerBottom = 500
+  // get the position of the bottom of the element on the screen
+  const bottom = props.positionY + props.imgHeight
+  // if we're not at the bottom of the screen
+  if (bottom <= containerBottom) {
+    //Update Animation Frame or PNG to show Falling State
+    if (props.dragged != true) {
+      rabbitState.value = 'FALLING'
+    }
+    // and increase the distance fallen (only on Y axis)
+    // comp falling faster if the mouse is moving, or if were dragging could have something to do with this
+    // update the Position X and Y properties in the component
+    updatePosition(props.positionX, props.positionY + fallSpeed.value)
+    // request Tick to rechect gravity again (continuous loop)
+  } else {
+    rabbitState.value = 'IDLE'
+  }
+  // Update IMG to point to whatever the state variable is
+  rabbitIMG.value = '/rabbit' + rabbitState.value + '.gif'
 }
 
-onMounted(() => {
-  gravity()
-})
-
-
+requestAnimationFrame(tick)
 
 watch(
   // watches Props.Dragged, MousePosition X, and MousePosition Y
   () => [props.dragged, props.mousePosition.x, props.mousePosition.y],
   ([dragged]) => {
-    console.log(fallSpeed.value)
     // if we are dragging the mouse
     if (dragged) {
       // Rabbit follows mouse
       // IF WE HAVE MOUSE POSITION PASSED
       if (props.mousePosition) {
         // Set fallSpeed to 0, and state to DRAGGING
-        console.log('DRAGGING!!!')
         rabbitState.value = 'DRAGGING'
+        
         // Set x and y position of rabbit to x and y position of mouse
-        xPosition.value = props.mousePosition.x - props.imgWidth / 2
-        yPosition.value = props.mousePosition.y - props.imgHeight / 2
+        updatePosition(
+          props.mousePosition.x - props.imgWidth / 2, 
+          props.mousePosition.y - props.imgHeight / 2
+        )
       }
       // Otherwise, resume gravity / set fallSpeed back to 2
-      updatePosition()
       
-    } else {
-      // Reset state to Falling or Idle and call Gravity once again
-      // Maybe find a way to always be calling the Gravity function? unsure. This works for now.
-      gravity()
     }
-    
   },
 )
 
@@ -127,15 +99,14 @@ watch(
 // and update the bottom to say what state is
 
 // Updates the position of the rabbit component, and passes it through to the parent component
-const updatePosition = () => {
+const updatePosition = (x, y) => {
   // emits rabbits position so parent component can see it in the browser
   emit('updatePosition', {
     id: props.id,
-    x: xPosition.value,
-    y: yPosition.value,
+    x,
+    y,
   })
 }
-
 
 // handle state for rabbit here? If rabbit is interacted with,
 //  pass whatever is interacted with through properties/emission.
@@ -147,15 +118,19 @@ const updatePosition = () => {
     class="rabbit"
     ref="rabbitRef"
     :style="{
-      left: xPosition + 'px',
-      top: yPosition + 'px',
+      left: positionX + 'px',
+      top: positionY + 'px',
     }"
   >
-    <div>
-      <p>{{ rabbitState }}</p>
-      <!-- Change so Style (rotate 45 deg) is applied when in FALLING state, and rotate(0deg) is applied when in IDLE state -->
-      <!-- <img src="/rabbit-sit.png" style="height: 60px; width: 60px" /> -->
-    </div>
+    <p>{{ rabbitState }}</p>
+    <!-- Change so Style (rotate 45 deg) is applied when in FALLING state, and rotate(0deg) is applied when in IDLE state -->
+    <img 
+      src="/rabbit-sit.png" 
+      :style="{
+        height: imgHeight + 'px',
+        width: imgWidth + 'px',
+      }" 
+    />
   </div>
 </template>
 

@@ -4,8 +4,9 @@ import Rabbit from '../components/RabbitComponent.vue'
 
 let retrievedStorage = localStorage.getItem('rabbitsLS')
 let retArray = JSON.parse(retrievedStorage)
+//make array shaped :O
 
-const rabbitID = ref(retArray ? retArray.length : 0)
+let rabbitID = retArray ? retArray.length : 0
 const rabbitArray = ref(retArray ? retArray : [])
 
 // Save Mouse Position
@@ -17,17 +18,17 @@ const hover = ref(false)
 // creates a new rabbit at the current mouse position and persists it in localStorage
 // Also uses rabbit Schema
 const addRabbit = () => {
-  const id = rabbitID.value++ // Get Rabbit ID
+  const id = rabbitID++ // Get Rabbit ID
   const { x, y } = mousePosition // get Mouse Position X and Y
-
+  const size = 30+Math.random() * 30
   rabbitArray.value.push({
     id,
     name: `Rabbit ${id}`,
     positionX: x,
     positionY: y,
     dragged: false,
-    imgWidth: 60,
-    imgHeight: 60,
+    imgWidth: size,
+    imgHeight: size,
   }) // Push to Array, following Schema in Rabbit Component
 
   let rabbits = JSON.stringify(rabbitArray.value)
@@ -54,7 +55,7 @@ const removeRabbit = (id) => {
 // Clears all rabbits, resets the array and increment value, and clears local storage
 const clearAllRabbits = () => {
   rabbitArray.value = []
-  rabbitID.value = 0
+  rabbitID = 0
   localStorage.clear()
 }
 
@@ -74,8 +75,9 @@ const updateRabbitPosition = ({ id, x, y }) => {
 // Handles Mouse Position
 const handleMouseMove = (event) => {
   hover.value = true
-  mousePosition.x = event.clientX
-  mousePosition.y = event.clientY
+  mousePosition.x = event.offsetX
+  mousePosition.y = event.offsetY
+  //
 }
 </script>
 
@@ -93,23 +95,24 @@ const handleMouseMove = (event) => {
       class="field"
       @click="addRabbit"
       @click.right.prevent="removeRabbit()"
-      @mousemove="handleMouseMove"
+      @mousemove.capture.self="handleMouseMove"
       @mouseleave="hover = false"
       style="padding: 5px"
     >
       <!-- Clickable Area that spawns rabbits -->
+      <Rabbit
+        v-for="rabbit in rabbitArray"
+        @click.right.prevent="removeRabbit(rabbit?.id)"
+        :key="rabbit.id"
+        v-bind="rabbit"
+        :mousePosition="mousePosition"
+        @updatePosition="updateRabbitPosition"
+        @pointerdown="rabbit.dragged = true"
+        @pointerup="rabbit.dragged = false"
+        style="position: absolute; z-index: 1; cursor: pointer"
+      />
     </section>
-    <Rabbit
-      v-for="rabbit in rabbitArray"
-      @click.right.prevent="removeRabbit(rabbit?.id)"
-      :key="rabbit.id"
-      v-bind="rabbit"
-      :mousePosition="mousePosition"
-      @updatePosition="updateRabbitPosition"
-      @pointerdown="rabbit.dragged = true"
-      @pointerup="rabbit.dragged = false"
-      style="position: absolute; z-index: 1; cursor: pointer"
-    />
+    
     <!-- :mousePosition binds the mousePosition (x and y object) to each Rabbit component. Those are then passed through properties
             and watched for changes. If we have changes, and are dragging, we stop gravity, and emit the position back to the parent
               component, which then updates the position.-->
