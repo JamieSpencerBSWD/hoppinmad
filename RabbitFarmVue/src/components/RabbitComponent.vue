@@ -35,10 +35,12 @@ const props = defineProps({
   },
 })
 
+//RABBIT COMPONENT SHOULDNT MANAGE ANYTHING BUT ITS OWN STATE, AND REACT ACCORDINGLY
+
 const emit = defineEmits(['updatePosition'])
 
-const rabbitRef = ref(null)
-const fallSpeed = ref(props.dragged ? 0 : 8) // how fast we fall
+//const rabbitRef = ref(null)
+const fallSpeed = ref(15) // how fast we fall
 const rabbitState = ref('')
 const rabbitIMG = ref('')
 
@@ -64,8 +66,9 @@ const gravityTick = () => {
     rabbitState.value = 'IDLE'
   }
   // Update IMG to point to whatever the state variable is
-  rabbitIMG.value = '/rabbit' + rabbitState.value + '.gif'
+  rabbitIMG.value = '/rabbit' + rabbitState.value + '.png'
 }
+//requestAnimationFrame queues up the next frame and tells the browser to call a specific function before the next rerender
 
 requestAnimationFrame(gravityTick)
 
@@ -77,15 +80,16 @@ watch(
     if (dragged) {
       // Rabbit follows mouse
       // IF WE HAVE MOUSE POSITION PASSED
+      updatePosition(
+          props.mousePosition.x - props.imgWidth  / 2,
+          props.mousePosition.y - props.imgHeight  / 2,
+        )
       if (props.mousePosition) {
         // Set fallSpeed to 0, and state to DRAGGING
         rabbitState.value = 'DRAGGING'
         
         // Set x and y position of rabbit to x and y position of mouse
-        updatePosition(
-          props.mousePosition.x - props.imgWidth,
-          props.mousePosition.y - props.imgHeight,
-        )
+        
       }
       // Otherwise, resume gravity / set fallSpeed back to 2
     }
@@ -114,20 +118,19 @@ const updatePosition = (x, y) => {
 <template>
   <div
     class="rabbit"
-    ref="rabbitRef"
     :style="{
       left: positionX + 'px',
       top: positionY + 'px',
     }"
   >
-    <!-- <p>{{ rabbitState }}</p> -->
     <!-- Change so Style (rotate 45 deg) is applied when in FALLING state, and rotate(0deg) is applied when in IDLE state -->
     <img 
-      src="/rabbit-sit.png" 
+      :src="rabbitIMG" 
       :style="{
         height: imgHeight + 'px',
         width: imgWidth + 'px',
-      }" 
+      }"
+      draggable="false" 
     />
   </div>
 </template>
@@ -138,5 +141,10 @@ const updatePosition = (x, y) => {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 </style>
