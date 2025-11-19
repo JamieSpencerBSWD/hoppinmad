@@ -20,7 +20,7 @@ const hover = ref(false)
 const addRabbit = () => {
   const id = rabbitID++ // Get Rabbit ID
   const { x, y } = mousePosition // get Mouse Position X and Y
-  const size = 30+Math.random() * 30
+  const size = 30+Math.random() * 60
   rabbitArray.value.push({
     id,
     name: `Rabbit ${id}`,

@@ -45,8 +45,8 @@ const rabbitIMG = ref('')
 //MOVE TICK/GRAVITY INTO PARENT
 
 //we know the coords of the rabbit, we dont need refsss
-const tick = () => {
-  requestAnimationFrame(tick)
+const gravityTick = () => {
+  requestAnimationFrame(gravityTick)
   const containerBottom = 500
   // get the position of the bottom of the element on the screen
   const bottom = props.positionY + props.imgHeight
@@ -68,7 +68,7 @@ const tick = () => {
   rabbitIMG.value = '/rabbit' + rabbitState.value + '.gif'
 }
 
-requestAnimationFrame(tick)
+requestAnimationFrame(gravityTick)
 
 watch(
   // watches Props.Dragged, MousePosition X, and MousePosition Y
@@ -76,6 +76,7 @@ watch(
   ([dragged]) => {
     // if we are dragging the mouse
     if (dragged) {
+      fallSpeed.value = 0
       // Rabbit follows mouse
       // IF WE HAVE MOUSE POSITION PASSED
       if (props.mousePosition) {
@@ -89,7 +90,7 @@ watch(
         )
       }
       // Otherwise, resume gravity / set fallSpeed back to 2
-      
+      fallSpeed.value = 2
     }
   },
 )
