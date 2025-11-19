@@ -3,11 +3,13 @@ import { ref, reactive } from 'vue'
 import Rabbit from '../components/RabbitComponent.vue'
 
 let retrievedStorage = localStorage.getItem('rabbitsLS')
-let retArray = JSON.parse(retrievedStorage)
+let localStorageArray = JSON.parse(retrievedStorage)
+console.log("returnedArray", localStorageArray)
 //make array shaped :O
 
-let rabbitID = retArray ? retArray.length : 0
-const rabbitArray = ref(retArray ? retArray : [])
+
+let rabbitID = localStorageArray ? localStorageArray.length : 0
+const rabbitArray = ref(localStorageArray ? localStorageArray : [])
 
 // Save Mouse Position
 const mousePosition = reactive({
@@ -93,6 +95,7 @@ const handleMouseMove = (event) => {
   <div style="display: flex; flex-direction: row">
     <section
       class="field"
+      ref="fieldDiv"
       @click="addRabbit"
       @click.right.prevent="removeRabbit()"
       @mousemove.capture.self="handleMouseMove"

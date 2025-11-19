@@ -38,7 +38,7 @@ const props = defineProps({
 const emit = defineEmits(['updatePosition'])
 
 const rabbitRef = ref(null)
-const fallSpeed = ref(props.dragged ? 0 : 2) // how fast we fall
+const fallSpeed = ref(props.dragged ? 0 : 8) // how fast we fall
 const rabbitState = ref('')
 const rabbitIMG = ref('')
 
@@ -47,7 +47,8 @@ const rabbitIMG = ref('')
 //we know the coords of the rabbit, we dont need refsss
 const gravityTick = () => {
   requestAnimationFrame(gravityTick)
-  const containerBottom = 500
+  //replace with bottom of container when moving into HomePage component
+  const containerBottom = 700
   // get the position of the bottom of the element on the screen
   const bottom = props.positionY + props.imgHeight
   // if we're not at the bottom of the screen
@@ -55,11 +56,9 @@ const gravityTick = () => {
     //Update Animation Frame or PNG to show Falling State
     if (props.dragged != true) {
       rabbitState.value = 'FALLING'
+      //Update the Y position of the value, and emit that up to the container
+      updatePosition(props.positionX, props.positionY + fallSpeed.value)
     }
-    // and increase the distance fallen (only on Y axis)
-    // comp falling faster if the mouse is moving, or if were dragging could have something to do with this
-    // update the Position X and Y properties in the component
-    updatePosition(props.positionX, props.positionY + fallSpeed.value)
     // request Tick to rechect gravity again (continuous loop)
   } else {
     rabbitState.value = 'IDLE'
@@ -76,7 +75,6 @@ watch(
   ([dragged]) => {
     // if we are dragging the mouse
     if (dragged) {
-      fallSpeed.value = 0
       // Rabbit follows mouse
       // IF WE HAVE MOUSE POSITION PASSED
       if (props.mousePosition) {
@@ -85,12 +83,11 @@ watch(
         
         // Set x and y position of rabbit to x and y position of mouse
         updatePosition(
-          props.mousePosition.x - props.imgWidth / 2, 
-          props.mousePosition.y - props.imgHeight / 2
+          props.mousePosition.x - props.imgWidth,
+          props.mousePosition.y - props.imgHeight,
         )
       }
       // Otherwise, resume gravity / set fallSpeed back to 2
-      fallSpeed.value = 2
     }
   },
 )
@@ -123,7 +120,7 @@ const updatePosition = (x, y) => {
       top: positionY + 'px',
     }"
   >
-    <p>{{ rabbitState }}</p>
+    <!-- <p>{{ rabbitState }}</p> -->
     <!-- Change so Style (rotate 45 deg) is applied when in FALLING state, and rotate(0deg) is applied when in IDLE state -->
     <img 
       src="/rabbit-sit.png" 
