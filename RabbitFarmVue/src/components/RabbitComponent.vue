@@ -40,7 +40,7 @@ const props = defineProps({
 const emit = defineEmits(['updatePosition'])
 
 //const rabbitRef = ref(null)
-const fallSpeed = ref(15) // how fast we fall
+const fallSpeed = ref(6) // how fast we fall
 const rabbitState = ref('')
 const rabbitIMG = ref('')
 

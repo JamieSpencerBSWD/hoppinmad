@@ -42,12 +42,8 @@ const addRabbit = () => {
 
     let rabbits = JSON.stringify(rabbitArray.value)
     localStorage.setItem('rabbitsLS', rabbits)
-    
-    //console.log("Logging the array of rabbits:", rabbitArray.value)
-  }else{
-    //turn spawning back on
     canSpawn.value = true
-    console.log("Cannot spawn any more rabbits.")
+    //console.log("Logging the array of rabbits:", rabbitArray.value)
   }
 }
 
@@ -65,6 +61,7 @@ const removeRabbit = (id) => {
   }
   // save to localStorage
   localStorage.setItem('rabbitsLS', JSON.stringify(rabbitArray.value))
+  canSpawn.value = true;
 }
 
 // Clears all rabbits, resets the array and increment value, and clears local storage
@@ -110,7 +107,7 @@ const handleMouseMove = (event) => {
     <section
       class="field"
       ref="fieldDiv"
-      @mouseup.left="addRabbit"
+      @mousedown.left="addRabbit"
       @click.right.prevent="removeRabbit()"
       @mousemove.capture.self="handleMouseMove"
       @mouseleave="hover = false"
@@ -130,9 +127,10 @@ const handleMouseMove = (event) => {
         v-bind="rabbit"
         :mousePosition="mousePosition"
         @mousemove="canSpawn = false"
+        @mouseleave="canSpawn = true"
         @updatePosition="updateRabbitPosition"
-        @mousedown.left="rabbit.dragged = true, canSpawn = true"
-        @mouseup.left="rabbit.dragged = false, canSpawn = false"
+        @mousedown.left="rabbit.dragged = true"
+        @mouseup.left="rabbit.dragged = false"
         style="position: absolute; cursor: pointer; border: 1px solid blue; z-index: 1;"
       />
     </section>
@@ -149,6 +147,8 @@ const handleMouseMove = (event) => {
       <h1>Tools</h1>
       <button @click="clearAllRabbits">Clear All Rabbits</button>
       <p>Rabbits Spawned: {{ rabbitArray.length}}</p>
+      <!-- If were hovering over the spawnable place, AND not currently hovering over a rabbit, then we can spawn more rabbits -->
+      <p>Can Spawn Rabbits: {{ canSpawn===true && hover===true?true:false }}</p>
       <!-- Tools: Pause Rabbits, Resume Rabbits, Despawn All, interactions -->
     </section>
   </div>
@@ -169,6 +169,7 @@ const handleMouseMove = (event) => {
   overflow: hidden;
 }
 .mousePosition {
+  padding: 10px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -176,7 +177,12 @@ const handleMouseMove = (event) => {
   border: 1px solid green;
 }
 .toolBar {
+  padding: 10px;
   border: 1px solid black;
   width: 10%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
 }
 </style>
