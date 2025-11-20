@@ -40,7 +40,7 @@ const props = defineProps({
 const emit = defineEmits(['updatePosition'])
 
 //const rabbitRef = ref(null)
-const fallSpeed = ref(6) // how fast we fall
+const fallSpeed = ref(10) // how fast we fall
 const rabbitState = ref('')
 const rabbitIMG = ref('')
 
@@ -69,7 +69,6 @@ const gravityTick = () => {
   rabbitIMG.value = '/rabbit' + rabbitState.value + '.png'
 }
 //requestAnimationFrame queues up the next frame and tells the browser to call a specific function before the next rerender
-
 requestAnimationFrame(gravityTick)
 
 watch(

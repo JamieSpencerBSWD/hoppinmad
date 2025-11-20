@@ -26,7 +26,7 @@ const addRabbit = () => {
   //and we arent at the maximum number of rabbits we can spawn (100-200)
     //then spawn rabbits
   let maxNumOfRabbits = 200
-  if(canSpawn.value ===  true && rabbitArray.value.length <= maxNumOfRabbits){
+  if(canSpawn.value ===  true && rabbitArray.value.length < maxNumOfRabbits){
     const id = rabbitID++ // Get Rabbit ID
     const { x, y } = mousePosition // get Mouse Position X and Y
     const size = 30+Math.random() * 60
@@ -91,6 +91,10 @@ const handleMouseMove = (event) => {
   mousePosition.y = event.offsetY - fieldDiv.value.offsetParent.clientTop
   //
 }
+
+
+//FROM HERE DOWN IS ALL FROM RABBIT COMPONENT
+//CUT AND PASTE BACK INTO RC TO FIX
 </script>
 
 <template>
