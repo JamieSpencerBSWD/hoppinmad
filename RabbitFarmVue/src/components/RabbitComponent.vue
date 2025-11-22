@@ -1,5 +1,20 @@
 <script setup>
 import { ref, watch } from 'vue'
+
+//WHAT THE RABBIT COMPONENT SHOULD DO
+/*
+- Show the rabbit visually
+- React to events passed through (switch images based on STATE)
+- Emit events when interacting, like dragging
+- Basically, just the display layer
+
+- WHAT THE RABBIT COMPONENT NEEDS
+- X and Y position from parent
+- Width and Height from parent
+- State from parent
+- Emit events (dragStart, dragEnd, etc)
+*/
+
 const props = defineProps({
   id: {
     type: Number,
@@ -36,11 +51,21 @@ const props = defineProps({
 })
 
 //RABBIT COMPONENT SHOULDNT MANAGE ANYTHING BUT ITS OWN STATE, AND REACT ACCORDINGLY
+/*EVENTS TO EMIT FROM RABBIT COMPONENT:
 
+  - dragStart/End (or dragged, and react when bool flips)
+  - right-click (account for deletion)
+  - hover/leave (to check if we CAN drag, i.e. if the user is hovering, and clicks, start dragging)
+
+
+*/
+
+//emit that we updated the position of the rabbit so we can update this in the parent.
+//unneeded as we will be calling the rabbits from the rabbitArray
 const emit = defineEmits(['updatePosition'])
 
 //const rabbitRef = ref(null)
-const fallSpeed = ref(10) // how fast we fall
+const fallSpeed = 20 // how fast we fall
 const rabbitState = ref('')
 const rabbitIMG = ref('')
 
@@ -50,16 +75,16 @@ const rabbitIMG = ref('')
 const gravityTick = () => {
   requestAnimationFrame(gravityTick)
   //replace with bottom of container when moving into HomePage component
-  const containerBottom = 700
+  const containerBottom = 500
   // get the position of the bottom of the element on the screen
   const bottom = props.positionY + props.imgHeight
   // if we're not at the bottom of the screen
-  if (bottom <= containerBottom) {
+  if (bottom < containerBottom) {
     //Update Animation Frame or PNG to show Falling State
     if (props.dragged != true) {
       rabbitState.value = 'FALLING'
       //Update the Y position of the value, and emit that up to the container
-      updatePosition(props.positionX, props.positionY + fallSpeed.value)
+      updatePosition(props.positionX, props.positionY + fallSpeed)
     }
     // request Tick to rechect gravity again (continuous loop)
   } else {
@@ -80,9 +105,9 @@ watch(
       // Rabbit follows mouse
       // IF WE HAVE MOUSE POSITION PASSED
       updatePosition(
-          props.mousePosition.x - props.imgWidth  / 2,
-          props.mousePosition.y - props.imgHeight  / 2,
-        )
+        props.mousePosition.x - props.imgWidth  / 2,
+        props.mousePosition.y - props.imgHeight  / 2,
+      )
       if (props.mousePosition) {
         // Set fallSpeed to 0, and state to DRAGGING
         rabbitState.value = 'DRAGGING'
@@ -120,6 +145,7 @@ const updatePosition = (x, y) => {
     :style="{
       left: positionX + 'px',
       top: positionY + 'px',
+      cursor: props.dragged?'grabbing':'grab'
     }"
   >
     <!-- Change so Style (rotate 45 deg) is applied when in FALLING state, and rotate(0deg) is applied when in IDLE state -->

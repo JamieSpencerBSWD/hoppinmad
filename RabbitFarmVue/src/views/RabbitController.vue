@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, useTemplateRef } from 'vue'
+import { ref, reactive } from 'vue'
 import Rabbit from '../components/RabbitComponent.vue'
 
 //WHAT THE HOMEPAGE SHOULD DO
@@ -14,23 +14,17 @@ import Rabbit from '../components/RabbitComponent.vue'
 
 let retrievedStorage = localStorage.getItem('rabbitsLS')
 let localStorageArray = JSON.parse([retrievedStorage])
-console.log("returnedArray", localStorageArray)
-let fieldDiv = useTemplateRef('fieldDiv')
-//make array shaped :O
-
-
+//const fieldDiv = ref(null);
 let rabbitID = localStorageArray ? localStorageArray.length : 0
+
 const rabbitArray = ref(localStorageArray ? localStorageArray : [])
 let canSpawn = ref(true);
-
-// Save Mouse Position
 const mousePosition = reactive({
   x: 0,
   y: 0,
 })
 const hover = ref(false)
-// creates a new rabbit at the current mouse position and persists it in localStorage
-// Also uses rabbit Schema
+
 const addRabbit = () => {
   //if we can spawn rabbits, (if a rabbit isnt being hovered over or dragged)
   //and we arent at the maximum number of rabbits we can spawn (100-200)
@@ -48,8 +42,8 @@ const addRabbit = () => {
       dragged: false,
       imgWidth: size,
       imgHeight: size,
-    }) // Push to Array, following Schema in Rabbit Component
-
+      state: 'IDLE'
+    }) // Push to Array, following Schema in Rabbit Component, and save to localStorage
     let rabbits = JSON.stringify(rabbitArray.value)
     localStorage.setItem('rabbitsLS', rabbits)
     canSpawn.value = true
@@ -57,13 +51,11 @@ const addRabbit = () => {
 }
 
 // removes rabbit that was right-clicked, and updates local storage
-// if id is not provided (i.e., just clicking on the FIELD div), deletes the last rabbit in the array
 const removeRabbit = (id) => {
+  //find rabbit in array if we have an id passed
   if (id !== null) {
     const index = rabbitArray.value.findIndex((rabbit) => rabbit.id === id)
-
     if (index !== -1) {
-      //removes rabbit from array whos id matches the id passed
       console.log('Removing rabbit with ID:', id)
       rabbitArray.value.splice(index, 1)
     }
@@ -80,16 +72,11 @@ const clearAllRabbits = () => {
   localStorage.clear()
 }
 
-// Recieves X, Y, and ID of rabbit component and updates accordingly
+// Recieves X, Y, and ID of rabbit component and updates the corresponding entry in the array accordingly
 const updateRabbitPosition = ({ id, x, y }) => {
-  // find the rabbit in the array whos ID matches our own ID
   const rabbit = rabbitArray.value.find((rabbit) => rabbit.id === id)
-  // if rabbit doesnt exist, then stop and do not update array (would throw err as rabbit doesnt exist. Null Pointer?)
-  if (!rabbit) return
-  // update position
   rabbit.positionX = x
   rabbit.positionY = y
-  // save updated to local storage
   localStorage.setItem('rabbitsLS', JSON.stringify(rabbitArray.value))
 }
 
@@ -109,17 +96,56 @@ const handleMouseMove = (event) => {
 
 
 //FROM HERE DOWN IS ALL FROM RABBIT COMPONENT
-//CUT AND PASTE BACK INTO RC TO FIX
 
-/* 
-- iterate through the rabbit array
-- if (rabbitIDParam) = rabbitArray[i].id
-- If the rabbit is being dragged, set state to dragged and skip gravity (turn fallspeed to 0)
--  Else, execute gravity logic
--    (if bottom < containerBottom) then positionY += fallSpeed & state = 'Falling'
--    Update position X and Y in rabbit component and send to that specific rabbit passed through
--  Else if state = 'IDLE', weve reached the bottom of the field box
-*/
+//const rabbitRef = ref(null)
+const fallSpeed = 1 // how fast we fall ( >>> Doesn't work to control the fall speed anymore?? <<< )
+
+
+const gravityTick = () => {
+  //For Every rabbit in the array...
+  rabbitArray.value.forEach(rabbit => {
+    // (replace with bottom of container when moving into HomePage component)
+    const containerBottom = 550
+    // ...get the position of the bottom of the element on the screen
+    const bottom = rabbit.positionY + rabbit.imgHeight
+    // ...and if we're not at the bottom of the screen
+    if (bottom <= containerBottom) {
+      //... if were not dragging
+      if (!rabbit.dragged && rabbit.state!=='IDLE') {
+        rabbit.state = 'FALLING'
+        //"Apply gravity", i.e. increace the y position of the rabbit
+
+        updateRabbitPosition(rabbit.id, rabbit.positionX, rabbit.positionY + fallSpeed) 
+        // >>> This feels very intensive and unnecessary <<<
+        // >>> I don't like that its going through EVERY SINGLE ENTRY and applying it regardless
+      }
+    } else {
+      rabbit.state = 'IDLE'
+    }
+  });
+  requestAnimationFrame(gravityTick)
+}
+//requestAnimationFrame queues up the next frame and tells the browser to call a specific function before the next rerender
+requestAnimationFrame(gravityTick)
+
+
+
+
+// //TODO
+// // Make Rabbit Interactable, and able to be dragged. Keep track of STATE (dragged, falling, jumping, sleeping, etc) in a ref attribute,
+// // and update the bottom to say what state is
+
+// // Updates the position of the rabbit component, and passes it through to the parent component
+// const updatePosition = (x, y) => {
+//   // emits rabbits position so parent component can see it in the browser
+//   emit('updatePosition', {
+//     id: props.id,
+//     x,
+//     y,
+//   })
+// }
+
+//NEW STUFF: ===>
 
 </script>
 
