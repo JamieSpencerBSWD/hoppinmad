@@ -105,15 +105,14 @@ watch(
       // Rabbit follows mouse
       // IF WE HAVE MOUSE POSITION PASSED
       updatePosition(
-        props.mousePosition.x - props.imgWidth  / 2,
-        props.mousePosition.y - props.imgHeight  / 2,
+        props.mousePosition.x - props.imgWidth / 2,
+        props.mousePosition.y - props.imgHeight / 2,
       )
       if (props.mousePosition) {
         // Set fallSpeed to 0, and state to DRAGGING
         rabbitState.value = 'DRAGGING'
-        
+
         // Set x and y position of rabbit to x and y position of mouse
-        
       }
       // Otherwise, resume gravity / set fallSpeed back to 2
     }
@@ -145,17 +144,17 @@ const updatePosition = (x, y) => {
     :style="{
       left: positionX + 'px',
       top: positionY + 'px',
-      cursor: props.dragged?'grabbing':'grab'
+      cursor: props.dragged ? 'grabbing' : 'grab',
     }"
   >
     <!-- Change so Style (rotate 45 deg) is applied when in FALLING state, and rotate(0deg) is applied when in IDLE state -->
-    <img 
-      :src="rabbitIMG" 
+    <img
+      :src="rabbitIMG"
       :style="{
         height: imgHeight + 'px',
         width: imgWidth + 'px',
       }"
-      draggable="false" 
+      draggable="false"
     />
   </div>
 </template>

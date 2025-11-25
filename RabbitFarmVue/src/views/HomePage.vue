@@ -14,14 +14,13 @@ import Rabbit from '../components/RabbitComponent.vue'
 
 let retrievedStorage = localStorage.getItem('rabbitsLS')
 let localStorageArray = JSON.parse([retrievedStorage])
-console.log("returnedArray", localStorageArray)
+console.log('returnedArray', localStorageArray)
 let fieldDiv = useTemplateRef('fieldDiv')
 //make array shaped :O
 
-
 let rabbitID = localStorageArray ? localStorageArray.length : 0
 const rabbitArray = ref(localStorageArray ? localStorageArray : [])
-let canSpawn = ref(true);
+let canSpawn = ref(true)
 
 // Save Mouse Position
 const mousePosition = reactive({
@@ -34,12 +33,12 @@ const hover = ref(false)
 const addRabbit = () => {
   //if we can spawn rabbits, (if a rabbit isnt being hovered over or dragged)
   //and we arent at the maximum number of rabbits we can spawn (100-200)
-    //then spawn rabbits
+  //then spawn rabbits
   let maxNumOfRabbits = 200
-  if(canSpawn.value ===  true && rabbitArray.value.length < maxNumOfRabbits){
+  if (canSpawn.value === true && rabbitArray.value.length < maxNumOfRabbits) {
     const id = rabbitID++ // Get Rabbit ID
     const { x, y } = mousePosition // get Mouse Position X and Y
-    const size = 30+Math.random() * 60
+    const size = 30 + Math.random() * 60
     rabbitArray.value.push({
       id,
       name: `Rabbit ${id}`,
@@ -70,7 +69,7 @@ const removeRabbit = (id) => {
   }
   // save to localStorage
   localStorage.setItem('rabbitsLS', JSON.stringify(rabbitArray.value))
-  canSpawn.value = true;
+  canSpawn.value = true
 }
 
 // Clears all rabbits, resets the array and increment value, and clears local storage
@@ -106,8 +105,6 @@ const handleMouseMove = (event) => {
   or add the rabbits offsetX and Y to the offsetX and Y of the fieldDiv*/
 }
 
-
-
 //FROM HERE DOWN IS ALL FROM RABBIT COMPONENT
 //CUT AND PASTE BACK INTO RC TO FIX
 
@@ -120,7 +117,6 @@ const handleMouseMove = (event) => {
 -    Update position X and Y in rabbit component and send to that specific rabbit passed through
 -  Else if state = 'IDLE', weve reached the bottom of the field box
 */
-
 </script>
 
 <template>
@@ -144,12 +140,11 @@ const handleMouseMove = (event) => {
         @mouseleave="hover = false"
         style="padding: 5px"
       >
-      
         <!-- Clickable Area that spawns rabbits -->
         <!-- When right clicking a rabbit, it deleted the rabbit selected, 
           but also removes the last rabbit in the array -->
 
-          <!-- TODO: Change canSpawn to be emitted from rabbit when dragging, 
+        <!-- TODO: Change canSpawn to be emitted from rabbit when dragging, 
           and toggled on and off when idle. Prevent double clicking to spawn after dragging a rabbit -->
         <Rabbit
           v-for="rabbit in rabbitArray"
@@ -162,10 +157,10 @@ const handleMouseMove = (event) => {
           @updatePosition="updateRabbitPosition"
           @mousedown.left="rabbit.dragged = true"
           @mouseup.left="rabbit.dragged = false"
-          style="position: absolute; border: 1px solid blue; z-index: 1;"
+          style="position: absolute; border: 1px solid blue; z-index: 1"
         />
       </section>
-      
+
       <!-- :mousePosition binds the mousePosition (x and y object) to each Rabbit component. Those are then passed through properties
               and watched for changes. If we have changes, and are dragging, we stop gravity, and emit the position back to the parent
                 component, which then updates the position.-->
@@ -177,9 +172,16 @@ const handleMouseMove = (event) => {
       <section class="toolBar">
         <h1>Tools</h1>
         <button @click="clearAllRabbits">Clear All Rabbits</button>
-        <p>Rabbits Spawned: {{ rabbitArray.length < 200 ? rabbitArray.length : rabbitArray.length +  " - Max Number of Rabbits Spawned!"}}</p>
+        <p>
+          Rabbits Spawned:
+          {{
+            rabbitArray.length < 200
+              ? rabbitArray.length
+              : rabbitArray.length + ' - Max Number of Rabbits Spawned!'
+          }}
+        </p>
         <!-- If were hovering over the spawnable place, AND not currently hovering over a rabbit, then we can spawn more rabbits -->
-        <p>Can Spawn Rabbits: {{ canSpawn===true && hover===true?true:false }}</p>
+        <p>Can Spawn Rabbits: {{ canSpawn === true && hover === true ? true : false }}</p>
         <!-- Tools: Pause Rabbits, Resume Rabbits, Despawn All, interactions -->
       </section>
     </div>
@@ -199,7 +201,7 @@ const handleMouseMove = (event) => {
   flex-direction: column;
   flex-wrap: wrap;
   overflow: hidden;
-  cursor: pointer
+  cursor: pointer;
 }
 .mousePosition {
   padding: 10px;
