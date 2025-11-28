@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive, useTemplateRef } from 'vue'
-import Rabbit from '../components/RabbitComponent.vue'
+import Rabbit from '../components/RabbitCompDumb.vue'
 
 //WHAT THE HOMEPAGE SHOULD DO
 /*
@@ -30,7 +30,7 @@ const hover = ref(false)
 let maxNumOfRabbits = 100
 const stopSpawning = ref(false)
 
-
+// Add simgle rabbit
 const addRabbit = () => {
   //if we can spawn rabbits, (if a rabbit isnt being hovered over or dragged)
   //and we arent at the maximum number of rabbits we can spawn (100-200)
@@ -53,6 +53,7 @@ const addRabbit = () => {
     let rabbits = JSON.stringify(rabbitArray.value)
     localStorage.setItem('rabbitsLS', rabbits)
     canSpawn.value = true
+    requestAnimationFrame(gravityTick)
   }
 }
 
@@ -61,11 +62,15 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 const spawningRabbits = ref(false);
+
+// Add a certain number of rabbits
 const addXRabbits = async(num) => {
-  stopSpawning.value = false;
-  spawningRabbits.value = true;
+  if (rabbitArray.value.length < maxNumOfRabbits){
+    stopSpawning.value = false;
+    spawningRabbits.value = true;
+  }
   //get height and width of field Div
-  const fieldHeight = field?.value.offsetHeight;
+  const fieldHeight = field?.value.offsetHeight + 100;
   const fieldWidth = field?.value.offsetWidth;
 
   for (let i = 0; i < num; i++) {
@@ -74,7 +79,7 @@ const addXRabbits = async(num) => {
       console.log("Stopping spawning");
       break;
     }
-
+    
     //same code as AddRabbits function, 
     // except were modifying the x and y position to be random x and y coords in the fieldDiv
     if(rabbitArray.value.length < maxNumOfRabbits){
@@ -84,8 +89,10 @@ const addXRabbits = async(num) => {
       rabbitArray.value.push({
         id,
         name: `Rabbit ${id}`,
-        positionX: Math.floor(Math.random() * fieldWidth + 30) - (size * 2),
-        positionY: Math.floor(Math.random() * fieldHeight + 30) - (size * 2),
+        
+        //Math.floor(Math.random() * (max => (maxWidth - half of the image size) - min => (twice of the image size) + 1)) + twice the image size;
+        positionX: Math.floor(Math.random() * ((fieldWidth - (size / 2)) - (size * 2))) + (size * 2),
+        positionY: Math.floor(Math.random() * ((fieldHeight - (size / 2)) - (size * 2))) - (size * 2),
         dragged: false,
         imgWidth: size,
         imgHeight: size,
@@ -93,7 +100,7 @@ const addXRabbits = async(num) => {
       }) 
       // Push to Array, following Schema in Rabbit Component, and save to localStorage
       //wait for 1/20th of a second, then continue
-      await sleep(50)
+      await sleep(250)
       let rabbits = JSON.stringify(rabbitArray.value)
       
       localStorage.setItem('rabbitsLS', rabbits)
@@ -160,6 +167,7 @@ const handleMouseMove = (event) => {
 //const rabbitRef = ref(null)
 const fallSpeed = 1 // how fast we fall ( >>> Doesn't work to control the fall speed anymore?? <<< )
 
+// Applies gravity to each rabbit in the array on every re-render
 const gravityTick = () => {
   //For Every rabbit in the array...
   rabbitArray.value.forEach((rabbit) => {
@@ -187,8 +195,7 @@ const gravityTick = () => {
           // >>> I don't like that its going through EVERY SINGLE ENTRY and applying it regardless
         }
         else {
-        rabbit.state = 'IDLE'
-        rabbit.positionY = floor - rabbit.imgHeight  
+          rabbit.state = 'IDLE'  
         }
       } 
   })
@@ -236,11 +243,6 @@ requestAnimationFrame(gravityTick)
         style="padding: 5px"
       >
         <!-- Clickable Area that spawns rabbits -->
-        <!-- When right clicking a rabbit, it deleted the rabbit selected, 
-          but also removes the last rabbit in the array -->
-
-        <!-- TODO: Change canSpawn to be emitted from rabbit when dragging, 
-          and toggled on and off when idle. Prevent double clicking to spawn after dragging a rabbit -->
         <Rabbit
           v-for="rabbit in rabbitArray"
           @click.right.prevent="removeRabbit(rabbit?.id)"

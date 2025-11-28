@@ -54,7 +54,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['dragStart', 'dragEnd', 'rightClick'])
+const emit = defineEmits(['updatePosition'])
 
 const rabbitIMG = computed(() => {
   if (props.state === 'FALLING') return '/images/rabbitFALLING.png'
@@ -62,12 +62,15 @@ const rabbitIMG = computed(() => {
   return '/images/rabbitIDLE.png'
 })
 
+console.log(rabbitIMG.value)
+
 watch(
   // watches Props.Dragged, MousePosition X, and MousePosition Y
   () => [props.dragged, props.mousePosition.x, props.mousePosition.y],
   ([dragged]) => {
     // if we are dragging the mouse
     if (dragged) {
+      console.log(props.state)
       // Rabbit follows mouse
       // IF WE HAVE MOUSE POSITION PASSED
       updatePosition(
@@ -113,13 +116,10 @@ const updatePosition = (x, y) => {
       top: positionY + 'px',
       cursor: props.dragged ? 'grabbing' : 'grab',
     }"
-    @mousedown="() => emit('dragStart', props.id)"
-    @mouseup.stop="() => emit('dragEnd', props.id)"
-    @contextmenu.prevent="() => emit('rightClick', props.id)"
   >
     <!-- Change so Style (rotate 45 deg) is applied when in FALLING state, and rotate(0deg) is applied when in IDLE state -->
     <img
-      :src="rabbitIMG"
+      :src="rabbitIMG.value"
       :style="{
         height: imgHeight + 'px',
         width: imgWidth + 'px',
