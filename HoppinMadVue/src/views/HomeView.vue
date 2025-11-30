@@ -9,8 +9,8 @@ import GoatViewer from '@/components/RabbitViewer.vue';
 		<aside style="float: right">
 			<pre><h4>Rabbits Array:</h4><code>{{ rabbits }}</code></pre>
 		</aside>
-		<div class="spawnField" @click="addRabbit">
-			
+		<div class="spawnField" id="spawnField" @click="addRabbit">
+			/* Move Rabbit List to be inside spawnField Div */
 		</div>
 		<div
 			v-for="(rabbit, index) in rabbits"
