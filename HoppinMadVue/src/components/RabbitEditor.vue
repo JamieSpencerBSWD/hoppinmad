@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { type Goat } from '@/models/goats';
-const goat = defineModel<Goat>({ required: true });
+import { type Rabbit } from '@/models/rabbits';
+const rabbit = defineModel<Rabbit>({ required: true });
 </script>
 <template>
 	<div>
@@ -9,7 +9,7 @@ const goat = defineModel<Goat>({ required: true });
 				<span>name</span>
 				<input
 					type="text"
-					v-model="goat.name"
+					v-model="rabbit.name"
 				/>
 			</label>
 		</div>
@@ -18,7 +18,7 @@ const goat = defineModel<Goat>({ required: true });
 				<span>is Grumpy?</span>
 				<input
 					type="checkbox"
-					v-model="goat.isGrumpy"
+					v-model="rabbit.isDragged"
 				/>
 			</label>
 		</div>
@@ -27,14 +27,14 @@ const goat = defineModel<Goat>({ required: true });
 				<span>Power Level</span>
 				<input
 					type="number"
-					v-model.number="goat.powerLevel"
+					v-model.number="rabbit.powerLevel"
 				/>
 			</label>
 		</div>
 
 		<div>
-			<button @click="goat.name = 'Gruff'">Set Name to Gruff</button>
-			<button @click="goat.name = 'Fawn'">Set Name to Fawn</button>
+			<button @click="rabbit.name = 'Mochi'">Set Name to Mochi</button>
+			<button @click="rabbit.name = 'Pixel'">Set Name to Pixel</button>
 		</div>
 	</div>
 </template>
