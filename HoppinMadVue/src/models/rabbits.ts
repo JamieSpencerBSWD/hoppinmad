@@ -18,7 +18,7 @@ import { ref } from 'vue';
 
 export type Rabbit = {
 	id: number;
-	name: string;
+	name: string; // Chosen randomly from a preset list of up to 250-300 names, if user doesnt provide one
 	isDragged: boolean; // changed if rabbit is being dragged. Should I keep this?
 	positionX: number; // X position (initial from mouse, updated when applying gravity or whatever)
 	positionY: number; // Y position (initial from mouse, updated when applying gravity or whatever)
@@ -35,7 +35,7 @@ export type Rabbit = {
 export const rabbits = ref<Rabbit[]>([
 	{
 		id: 0,
-		name: 'Gruff',
+		name: 'Mochi',
 		isDragged: true,
 		positionX: 0,
 		positionY: 0,
@@ -48,7 +48,7 @@ export const rabbits = ref<Rabbit[]>([
 	},
 	{
 		id: 1,
-		name: 'Fawn',
+		name: 'Taro',
 		isDragged: false,
 		positionX: 0,
 		positionY: 0,

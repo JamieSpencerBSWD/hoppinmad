@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { addRabbit, rabbits, removeRabbitByIndex } from '@/models/rabbits';
-//import GoatEditor from '@/components/RabbitEditor.vue';
-import GoatViewer from '@/components/RabbitViewer.vue';
+//import RabbitEditor from '@/components/RabbitEditor.vue';
+import RabbitViewer from '@/components/RabbitViewer.vue';
 </script>
 
 <template>
@@ -17,8 +17,8 @@ import GoatViewer from '@/components/RabbitViewer.vue';
 			:key="index"
 			style="z-index: 1;"
 		>
-			<GoatViewer v-bind="rabbit" />
-			<!-- <GoatEditor v-model="rabbits[index]!" /> -->
+			<RabbitViewer v-bind="rabbit" />
+			<!-- <RabbitEditor v-model="rabbits[index]!" /> -->
 			<div>
 				<button @click="removeRabbitByIndex(index)">Remove Rabbit: {{ rabbit.name }}</button>
 			</div>
