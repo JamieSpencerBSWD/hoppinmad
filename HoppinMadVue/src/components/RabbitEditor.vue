@@ -33,8 +33,8 @@ const rabbit = defineModel<Rabbit>({ required: true });
 		</div>
 
 		<div>
-			<button @click="rabbit.name = 'Mochi'">Set Name to Mochi</button>
-			<button @click="rabbit.name = 'Pixel'">Set Name to Pixel</button>
+			<button @click="rabbit.name = 'Matcha'">Set Name to Matcha</button>
+			<button @click="rabbit.name = 'Brown Sugar'">Set Name to Brown Sugar</button>
 		</div>
 	</div>
 </template>

@@ -25,7 +25,7 @@ export type Rabbit = {
 	velocityX: number; // Velocity of the rabbit on the X Axis. 0 for now
 	velocityY: number; // Velocity of the rabbit on the Y Axis. 0 for now
 	speed: number; // Should be a calculation based on velocity and gravity maybe?
-	mousePosition: {x: number, y: number}; // should be the current mousePosition,
+	mousePosition: { x: number; y: number }; // should be the current mousePosition,
 	// only passed in if the rabbit is being hovered over, or dragged
 	// could be used to change State and Actions if mouse is close
 	size: number; // should be square. width and height would use this.
@@ -37,8 +37,8 @@ export const rabbits = ref<Rabbit[]>([
 		id: 0,
 		name: 'Mochi',
 		isDragged: true,
-		positionX: 0,
-		positionY: 0,
+		positionX: 80,
+		positionY: 80,
 		velocityX: 0,
 		velocityY: 0,
 		speed: 0,
@@ -50,8 +50,8 @@ export const rabbits = ref<Rabbit[]>([
 		id: 1,
 		name: 'Taro',
 		isDragged: false,
-		positionX: 0,
-		positionY: 0,
+		positionX: 80,
+		positionY: 80,
 		velocityX: 0,
 		velocityY: 0,
 		speed: 0,
@@ -74,8 +74,8 @@ export const addRabbit = () => {
 		id: rabbits.value.length,
 		name: '',
 		isDragged: false,
-		positionX: 0,
-		positionY: 0,
+		positionX: 65,
+		positionY: 65,
 		velocityX: 0,
 		velocityY: 0,
 		speed: 0,
