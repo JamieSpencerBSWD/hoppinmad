@@ -33,32 +33,6 @@ export type Rabbit = {
 };
 
 export const rabbits = ref<Rabbit[]>([
-	{
-		id: 0,
-		name: 'Mochi',
-		isDragged: true,
-		positionX: 80,
-		positionY: 80,
-		velocityX: 0,
-		velocityY: 0,
-		speed: 0,
-		mousePosition: { x: 12, y: 34 },
-		size: 60,
-		powerLevel: 999,
-	},
-	{
-		id: 1,
-		name: 'Taro',
-		isDragged: false,
-		positionX: 80,
-		positionY: 80,
-		velocityX: 0,
-		velocityY: 0,
-		speed: 0,
-		mousePosition: { x: 0, y: 0 },
-		size: 60,
-		powerLevel: 9001,
-	},
 ]);
 
 const tickRabbit = (rabbit: Rabbit) => {
@@ -69,13 +43,13 @@ setInterval(() => {
 	rabbits.value.forEach(tickRabbit);
 }, 1000);
 
-export const addRabbit = () => {
+export const addRabbit = (x:number, y:number) => {
 	rabbits.value.push({
 		id: rabbits.value.length,
 		name: '',
 		isDragged: false,
-		positionX: 65,
-		positionY: 65,
+		positionX: x,
+		positionY: y,
 		velocityX: 0,
 		velocityY: 0,
 		speed: 0,

@@ -6,13 +6,11 @@ const rabbit = defineProps<Rabbit>();
 <template>
 	<div>
 		<img
-			src="@/assets/happy.png"
-			width="25px"
-			alt="overlay image representing rabbits emotional state: happy"
-		/>
-		<img
 			src="@/assets/angry.png"
-			width="25px"
+			:style="{
+				height: rabbit.size + 'px',
+				width: rabbit.size + 'px',
+			}"
 			alt="overlay image representing rabbits emotional state: angry"
 		/>
 		<h1>Name is currently: {{ rabbit.name }}</h1>
