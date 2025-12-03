@@ -32,8 +32,7 @@ export type Rabbit = {
 	powerLevel: number;
 };
 
-export const rabbits = ref<Rabbit[]>([
-]);
+export const rabbits = ref<Rabbit[]>([]);
 
 const tickRabbit = (rabbit: Rabbit) => {
 	//Perform Gravity Here?
@@ -43,7 +42,7 @@ setInterval(() => {
 	rabbits.value.forEach(tickRabbit);
 }, 1000);
 
-export const addRabbit = (x:number, y:number) => {
+export const addRabbit = (x: number, y: number) => {
 	rabbits.value.push({
 		id: rabbits.value.length,
 		name: '',
