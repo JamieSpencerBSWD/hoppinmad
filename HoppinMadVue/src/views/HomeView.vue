@@ -43,32 +43,32 @@ const handleMouseMove = (event: { offsetX: number; offsetY: number }) => {
 				@mousemove.capture.self="handleMouseMove"
 				@mouseleave="hover = false"
 			>
-				/* Move Rabbit List to be inside spawnField Div */
+				<div
+					v-for="(rabbit, index) in rabbits"
+					:key="index"
+				>
+					<!-- <RabbitEditor v-model="rabbits[index]!" /> -->
+					<!-- Set to click.right.prevent to set it to delete on right click, 
+							and prevent the default action(opening context menu) -->
+					<div>
+						<RabbitViewer
+							v-bind="rabbit"
+							style="position: absolute; z-index: 1;"
+							@click.right.prevent="removeRabbitByIndex(index)"
+						/>
+					</div>
+				</div>
 			</div>
 		</div>
-		<div
-			v-for="(rabbit, index) in rabbits"
-			:key="index"
-		>
-			<!-- <RabbitEditor v-model="rabbits[index]!" /> -->
-			<!-- Set to click.right.prevent to set it to delete on right click, 
-					and prevent the default action(opening context menu) -->
-			<div>
-				<RabbitViewer
-					v-bind="rabbit"
-					:style="{ top: rabbit.positionY, left: rabbit.positionX }"
-				/>
-				<button @click="removeRabbitByIndex(index)">Remove Rabbit: {{ rabbit.name }}</button>
-			</div>
-		</div>
+		
 	</main>
 </template>
 
 <style scoped>
 .spawnField {
 	border: 1px solid blue;
-	width: 500px;
-	height: 200px;
+	width: 100%;
+	height: 85vh;
 	cursor: pointer;
 }
 .mousePosition {
