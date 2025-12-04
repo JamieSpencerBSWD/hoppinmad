@@ -10,8 +10,9 @@ const mousePosition = reactive({
 });
 const hover = ref(false);
 
-const handleMouseMove = (event: { offsetX: number; offsetY: number }) => {
+const handleMouseMove = (event: MouseEvent) => {
 	hover.value = true;
+	console.log("Event Type:", typeof event, "\nEvent OBJ:", event)
 	mousePosition.x = event.offsetX;
 	mousePosition.y = event.offsetY;
 	//BUG
@@ -70,6 +71,7 @@ const handleMouseMove = (event: { offsetX: number; offsetY: number }) => {
 	width: 100%;
 	height: 85vh;
 	cursor: pointer;
+	position: relative;
 }
 .mousePosition {
 	display: flex;
