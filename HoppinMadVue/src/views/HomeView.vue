@@ -34,7 +34,7 @@ const handleMouseMove = (event: MouseEvent) => {
 			</h4>
 		</section>
 		<aside style="float: right">
-			<pre><h4>Rabbits Array:</h4><code>{{ rabbits }}</code></pre>
+			<pre><h4>Rabbits ({{ rabbits.length }}) Array:</h4><code>{{ rabbits }}</code></pre>
 		</aside>
 		<div style="display: flex; flex-direction: row">
 			<div
