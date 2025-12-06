@@ -39,7 +39,12 @@ onMounted(() => {
 			</h4>
 		</section>
 		<aside style="float: right">
-			<pre><h4>Rabbits ({{ rabbits.length }}) Array:</h4><code>{{ rabbits }}</code></pre>
+			<h4>Rabbits ({{ rabbits.length }}) Array:</h4>
+			
+			<details>
+				<summary>View JSON Array:</summary>
+				<pre><code>{{ rabbits }}</code></pre>
+			</details>
 		</aside>
 		<div style="display: flex; flex-direction: row">
 			<div
