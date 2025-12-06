@@ -22,6 +22,7 @@ export type Rabbit = {
 	isDragged: boolean; // changed if rabbit is being dragged. Should I keep this?
 	positionX: number; // X position (initial from mouse, updated when applying gravity or whatever)
 	positionY: number; // Y position (initial from mouse, updated when applying gravity or whatever)
+	fieldHeight: number;
 	velocityX: number; // Velocity of the rabbit on the X Axis. 0 for now
 	velocityY: number; // Velocity of the rabbit on the Y Axis. 0 for now
 	speed: number; // Should be a calculation based on velocity and gravity maybe?
@@ -34,6 +35,38 @@ export type Rabbit = {
 
 export const rabbits = ref<Rabbit[]>([]);
 
+const updateRabbitPosition = (rabbit: Rabbit, x:number, y:number) => {
+  rabbit.positionX = x
+  rabbit.positionY = y
+  localStorage.setItem('rabbitsLS', JSON.stringify(rabbits.value))
+}
+
+const fallSpeed = 10
+// Applies gravity to each rabbit in the array on every re-render
+const gravityTick = () => {
+	rabbits.value.forEach((rabbit) => {
+		const containerBottom = (rabbit.fieldHeight);
+		const floor = containerBottom
+		
+		const bottom = rabbit.positionY + (rabbit.size/2) + 5
+		if (!rabbit.isDragged) {
+			
+			if (bottom < floor) {
+				
+				updateRabbitPosition(rabbit, rabbit.positionX, rabbit.positionY + fallSpeed)
+				
+				// >>> This feels very intensive and unnecessary <<<
+				// >>> I don't like that its going through EVERY SINGLE ENTRY and applying it regardless
+				}
+				// else {
+				//   rabbit.state = 'IDLE'  
+				// }
+			} 
+		})
+	requestAnimationFrame(gravityTick)
+}
+requestAnimationFrame(gravityTick)
+
 const tickRabbit = (rabbit: Rabbit) => {
 	//Perform Gravity Here?
 	rabbit.powerLevel += 1;
@@ -42,13 +75,14 @@ setInterval(() => {
 	rabbits.value.forEach(tickRabbit);
 }, 1000);
 
-export const addRabbit = (x: number, y: number) => {
+export const addRabbit = (x: number, y: number, fieldHeight: number) => {
 	rabbits.value.push({
 		id: rabbits.value.length,
 		name: '',
 		isDragged: false,
 		positionX: x,
 		positionY: y,
+		fieldHeight: fieldHeight,
 		velocityX: 0,
 		velocityY: 0,
 		speed: 0,

@@ -2,17 +2,18 @@
 import { addRabbit, rabbits, removeRabbitByIndex } from '@/models/rabbits';
 //import RabbitEditor from '@/components/RabbitEditor.vue';
 import RabbitViewer from '@/components/RabbitViewer.vue';
-import { reactive, ref } from 'vue';
+import { onMounted, reactive, ref, useTemplateRef } from 'vue';
 
 const mousePosition = reactive({
 	x: 0,
 	y: 0,
 });
 const hover = ref(false);
+const spawnField = useTemplateRef("spawnField")
+let fieldHeight: number | null | undefined = null;
 
 const handleMouseMove = (event: MouseEvent) => {
 	hover.value = true;
-	console.log("Event Type:", typeof event, "\nEvent OBJ:", event)
 	mousePosition.x = event.offsetX;
 	mousePosition.y = event.offsetY;
 	//BUG
@@ -22,6 +23,10 @@ const handleMouseMove = (event: MouseEvent) => {
     Find a way to ignore the div for the rabbit, 
   or add the rabbits offsetX and Y to the offsetX and Y of the fieldDiv*/
 };
+
+onMounted(() => {
+	fieldHeight = spawnField.value?.offsetHeight
+})
 </script>
 
 <template>
@@ -40,7 +45,8 @@ const handleMouseMove = (event: MouseEvent) => {
 			<div
 				class="spawnField"
 				id="spawnField"
-				@click="addRabbit(mousePosition.x, mousePosition.y)"
+				ref="spawnField"
+				@click="addRabbit(mousePosition.x, mousePosition.y, fieldHeight?fieldHeight:0)"
 				@mousemove.capture.self="handleMouseMove"
 				@mouseleave="hover = false"
 			>
@@ -54,6 +60,7 @@ const handleMouseMove = (event: MouseEvent) => {
 					<div>
 						<RabbitViewer
 							v-bind="rabbit"
+							:fieldDiv="spawnField"
 							style="position: absolute; z-index: 1;"
 							@click.right.prevent="removeRabbitByIndex(index)"
 						/>
