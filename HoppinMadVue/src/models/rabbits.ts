@@ -1,4 +1,6 @@
 import { ref } from 'vue';
+
+import { Gravity } from '@/logic/physics';
 //Add Gravity and Dragging logic here!
 // What does a rabbit look like?
 //Rabbit should have:
@@ -30,50 +32,23 @@ export type Rabbit = {
 	// only passed in if the rabbit is being hovered over, or dragged
 	// could be used to change State and Actions if mouse is close
 	size: number; // should be square. width and height would use this.
-	powerLevel: number;
 };
 
-export const rabbits = ref<Rabbit[]>([]);
+const retrievedStorage = localStorage.getItem('rabbitsLS');
+const localStorageArray = JSON.parse(retrievedStorage!);
 
-const updateRabbitPosition = (rabbit: Rabbit, x:number, y:number) => {
-  rabbit.positionX = x
-  rabbit.positionY = y
-  localStorage.setItem('rabbitsLS', JSON.stringify(rabbits.value))
-}
+const rabbitArray = ref();
 
-const fallSpeed = 10
+export const rabbits = ref<Rabbit[]>(localStorageArray ? localStorageArray : []);
+
+//implement dragging here. extend physics to another class
+
 // Applies gravity to each rabbit in the array on every re-render
 const gravityTick = () => {
-	rabbits.value.forEach((rabbit) => {
-		const containerBottom = (rabbit.fieldHeight);
-		const floor = containerBottom
-		
-		const bottom = rabbit.positionY + (rabbit.size/2) + 5
-		if (!rabbit.isDragged) {
-			
-			if (bottom < floor) {
-				
-				updateRabbitPosition(rabbit, rabbit.positionX, rabbit.positionY + fallSpeed)
-				
-				// >>> This feels very intensive and unnecessary <<<
-				// >>> I don't like that its going through EVERY SINGLE ENTRY and applying it regardless
-				}
-				// else {
-				//   rabbit.state = 'IDLE'  
-				// }
-			} 
-		})
-	requestAnimationFrame(gravityTick)
-}
-requestAnimationFrame(gravityTick)
-
-const tickRabbit = (rabbit: Rabbit) => {
-	//Perform Gravity Here?
-	rabbit.powerLevel += 1;
+	Gravity();
+	requestAnimationFrame(gravityTick);
 };
-setInterval(() => {
-	rabbits.value.forEach(tickRabbit);
-}, 1000);
+requestAnimationFrame(gravityTick);
 
 export const addRabbit = (x: number, y: number, fieldHeight: number) => {
 	rabbits.value.push({
@@ -88,9 +63,9 @@ export const addRabbit = (x: number, y: number, fieldHeight: number) => {
 		speed: 0,
 		mousePosition: { x: 0, y: 0 },
 		size: 60,
-		powerLevel: 0,
 	});
 };
 export const removeRabbitByIndex = (removeIndex: number) => {
 	rabbits.value = rabbits.value.filter((rabbit, index) => index !== removeIndex);
+	localStorage.setItem('rabbitsLS', JSON.stringify(rabbits.value));
 };

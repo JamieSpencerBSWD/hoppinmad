@@ -4,7 +4,12 @@ import type { Rabbit } from '@/models/rabbits';
 const rabbit = defineProps<Rabbit>();
 </script>
 <template>
-	<div :style="{ top: (rabbit.positionY - (rabbit.size / 2)) + 'px', left: (rabbit.positionX - (rabbit.size / 2)) + 'px'}">
+	<div
+		:style="{
+			top: rabbit.positionY - rabbit.size / 2 + 'px',
+			left: rabbit.positionX - rabbit.size / 2 + 'px',
+		}"
+	>
 		<img
 			src="@/assets/rabbit-sit.png"
 			:style="{

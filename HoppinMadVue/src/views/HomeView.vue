@@ -9,7 +9,7 @@ const mousePosition = reactive({
 	y: 0,
 });
 const hover = ref(false);
-const spawnField = useTemplateRef("spawnField")
+const spawnField = useTemplateRef('spawnField');
 let fieldHeight: number | null | undefined = null;
 
 const handleMouseMove = (event: MouseEvent) => {
@@ -25,22 +25,20 @@ const handleMouseMove = (event: MouseEvent) => {
 };
 
 onMounted(() => {
-	fieldHeight = spawnField.value?.offsetHeight
-})
+	fieldHeight = spawnField.value?.offsetHeight;
+});
 </script>
 
 <template>
 	<main>
-		<section class="mousePosition">
-			<p>Click to spawn a rabbit, right click to despawn!</p>
+		<p>Click to spawn a rabbit, right click to despawn!</p>
+		<aside class="aside">
 			<h4>
 				Mouse is at {{ mousePosition.x }},
 				{{ mousePosition.y }}
 			</h4>
-		</section>
-		<aside style="float: right">
 			<h4>Rabbits ({{ rabbits.length }}) Array:</h4>
-			
+
 			<details>
 				<summary>View JSON Array:</summary>
 				<pre><code>{{ rabbits }}</code></pre>
@@ -51,7 +49,7 @@ onMounted(() => {
 				class="spawnField"
 				id="spawnField"
 				ref="spawnField"
-				@click="addRabbit(mousePosition.x, mousePosition.y, fieldHeight?fieldHeight:0)"
+				@click="addRabbit(mousePosition.x, mousePosition.y, fieldHeight ? fieldHeight : 0)"
 				@mousemove.capture.self="handleMouseMove"
 				@mouseleave="hover = false"
 			>
@@ -65,31 +63,27 @@ onMounted(() => {
 					<div>
 						<RabbitViewer
 							v-bind="rabbit"
-							:fieldDiv="spawnField"
-							style="position: absolute; z-index: 1;"
+							style="position: absolute; z-index: 1"
 							@click.right.prevent="removeRabbitByIndex(index)"
 						/>
 					</div>
 				</div>
 			</div>
 		</div>
-		
 	</main>
 </template>
 
 <style scoped>
+.aside {
+	float: right;
+	width: 10%;
+	padding: 1%;
+}
 .spawnField {
-	border: 1px solid blue;
+	background-color: rgb(206, 244, 203);
 	width: 100%;
 	height: 85vh;
 	cursor: pointer;
 	position: relative;
-}
-.mousePosition {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-between;
-	border: 1px solid green;
 }
 </style>
