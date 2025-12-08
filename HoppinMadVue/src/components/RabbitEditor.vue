@@ -22,15 +22,6 @@ const rabbit = defineModel<Rabbit>({ required: true });
 				/>
 			</label>
 		</div>
-		<div>
-			<label>
-				<span>Power Level</span>
-				<input
-					type="number"
-					v-model.number="rabbit.powerLevel"
-				/>
-			</label>
-		</div>
 
 		<div>
 			<button @click="rabbit.name = 'Matcha'">Set Name to Matcha</button>
