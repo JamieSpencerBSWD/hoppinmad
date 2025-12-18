@@ -62,21 +62,20 @@ let lastTime = performance.now(); // Use performance.now() for high-resolution t
 function updateVelocity(rabbit: Rabbit, currentX: number, currentY: number) {
 	const currentTime = performance.now();
 	// Calculate the change in position
-	const dx = currentX - lastX;
-	const dy = currentY - lastY;
+	const distanceX = currentX - lastX;
+	const distanceY = currentY - lastY;
 
 	// Calculate the change in time (in seconds)
-	const dt = (currentTime - lastTime) / 1000; 
+	const distanceTravelled = (currentTime - lastTime) / 1000; 
 
-	if (dt > 0) {
+	if (distanceTravelled > 0) {
 		// Calculate velocity components (e.g., pixels per second)
-		const vx = dx / dt;
-		const vy = dy / dt;
-		rabbit.velocityX = vx;
-		rabbit.velocityY = vy;
-
-		rabbit.speed = Math.sqrt(vx * vx + vy * vy);
-		console.log(`Velocity X: ${vx.toFixed(2)}, Velocity Y: ${vy.toFixed(2)}`);
+		const velocityX = distanceX / distanceTravelled;
+		const velocityY = distanceY / distanceTravelled;
+		rabbit.velocityX = velocityX;
+		rabbit.velocityY = velocityY;
+		//speed = distance / time
+		rabbit.speed = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
 	}
 
 	// Update last position and time for the next frame
