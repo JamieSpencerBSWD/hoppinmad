@@ -9,8 +9,9 @@ const gravity = 12;
 export const updateRabbitPosition = (rabbit: Rabbit, x: number, y: number) => {
 	rabbit.positionX = x;
 	rabbit.positionY = y;
-	localStorage.setItem('rabbitsLS', JSON.stringify(rabbits.value));
+	
 	updateVelocity(rabbit, rabbit.positionX, rabbit.positionY)
+	localStorage.setItem('rabbitsLS', JSON.stringify(rabbits.value));
 };
 export const Gravity = () => {
 	rabbits.value.forEach((rabbit) => {
@@ -38,6 +39,7 @@ export const Gravity = () => {
 			rabbit.velocityX *= 0.4; // optional friction for X
 		}
 	});
+	localStorage.setItem('rabbitsLS', JSON.stringify(rabbits.value));
 };
 export const dragItem = () => {
 	rabbits.value.forEach((rabbit) => {

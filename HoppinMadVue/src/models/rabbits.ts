@@ -78,3 +78,7 @@ export const removeRabbitByIndex = (removeIndex: number) => {
 	rabbits.value = rabbits.value.filter((rabbit, index) => index !== removeIndex);
 	localStorage.setItem('rabbitsLS', JSON.stringify(rabbits.value));
 };
+export const removeAllRabbits = () => {
+	rabbits.value = []
+	localStorage.setItem('rabbitsLS', JSON.stringify(rabbits.value));
+}

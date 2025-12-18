@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { addRabbit, draggedRabbit, rabbits, removeRabbitByIndex } from '@/models/rabbits';
+import { addRabbit, draggedRabbit, rabbits, removeAllRabbits, removeRabbitByIndex } from '@/models/rabbits';
 //import RabbitEditor from '@/components/RabbitEditor.vue';
 import RabbitViewer from '@/components/RabbitViewer.vue';
 import { onMounted, ref, useTemplateRef } from 'vue';
@@ -46,14 +46,14 @@ const spawnRabbit = () => {
 
 <template>
 	<main>
-		<p>Click to spawn a rabbit, right click to despawn!</p>
+		<p>Click to spawn a rabbit, right click to despawn! (Max 100)</p>
 		<aside class="aside">
 			<h4>
 				Mouse is at {{ mousePosition.x }},
 				{{ mousePosition.y }}
 			</h4>
 			<h4>Rabbits ({{ rabbits.length }}) Array:</h4>
-
+			<button @click="removeAllRabbits">Remove All Rabbits</button>
 			<details>
 				<summary>View JSON Array:</summary>
 				<pre><code>{{ rabbits }}</code></pre>
