@@ -4,7 +4,7 @@ import type { Rabbit } from '@/models/rabbits';
 const rabbit = defineProps<Rabbit>();
 </script>
 <template>
-	<div
+	<div class="rabbit"
 		:style="{
 			top: rabbit.positionY - rabbit.size / 2 + 'px',
 			left: rabbit.positionX - rabbit.size / 2 + 'px',
@@ -30,3 +30,8 @@ const rabbit = defineProps<Rabbit>();
 		<h3>Size: {{ rabbit.size }}</h3> -->
 	</div>
 </template>
+<style>
+	.rabbit{
+		cursor: pointer;
+	}
+</style>

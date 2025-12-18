@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import { addRabbit, rabbits, removeRabbitByIndex } from '@/models/rabbits';
+import { addRabbit, draggedRabbit, rabbits, removeRabbitByIndex } from '@/models/rabbits';
 //import RabbitEditor from '@/components/RabbitEditor.vue';
 import RabbitViewer from '@/components/RabbitViewer.vue';
-import { onMounted, reactive, ref, useTemplateRef } from 'vue';
+import { onMounted, ref, useTemplateRef } from 'vue';
 
-const mousePosition = reactive({
-	x: 0,
-	y: 0,
-});
+import { mousePosition } from '@/models/mouse';
+
 const hover = ref(false);
 const spawnField = useTemplateRef('spawnField');
 let fieldHeight: number | null | undefined = null;
@@ -27,6 +25,23 @@ const handleMouseMove = (event: MouseEvent) => {
 onMounted(() => {
 	fieldHeight = spawnField.value?.offsetHeight;
 });
+
+//chatgpt shit
+const handleGlobalMouseUp = () => {
+	if (!draggedRabbit.value) return;
+
+	draggedRabbit.value.isDragged = false;
+	draggedRabbit.value = null;
+};
+
+onMounted(() => {
+	window.addEventListener('mouseup', handleGlobalMouseUp);
+});
+
+const spawnRabbit = () => {
+	if (!draggedRabbit.value) {addRabbit(mousePosition.x, mousePosition.y, fieldHeight ? fieldHeight: 0)}
+}
+
 </script>
 
 <template>
@@ -49,7 +64,7 @@ onMounted(() => {
 				class="spawnField"
 				id="spawnField"
 				ref="spawnField"
-				@click="addRabbit(mousePosition.x, mousePosition.y, fieldHeight ? fieldHeight : 0)"
+				@mousedown.left="spawnRabbit"
 				@mousemove.capture.self="handleMouseMove"
 				@mouseleave="hover = false"
 			>
@@ -63,8 +78,13 @@ onMounted(() => {
 					<div>
 						<RabbitViewer
 							v-bind="rabbit"
-							style="position: absolute; z-index: 1"
+							style="position: absolute; z-index: 1;"
 							@click.right.prevent="removeRabbitByIndex(index)"
+							@mousedown.left.prevent="
+								draggedRabbit=rabbit
+								rabbit.isDragged = true;
+							"
+							:style="{cursor: rabbit.isDragged?'grabbing':'grab'}"
 						/>
 					</div>
 				</div>
@@ -83,7 +103,6 @@ onMounted(() => {
 	background-color: rgb(206, 244, 203);
 	width: 100%;
 	height: 85vh;
-	cursor: pointer;
 	position: relative;
 }
 </style>
