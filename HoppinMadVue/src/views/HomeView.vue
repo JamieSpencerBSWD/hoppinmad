@@ -48,19 +48,7 @@ const spawnRabbit = () => {
 
 <template>
 	<main>
-		<p>Click to spawn a rabbit, right click to despawn! (Max 100)</p>
-		<aside class="aside">
-			<h4>
-				Mouse is at {{ mousePosition.x }},
-				{{ mousePosition.y }}
-			</h4>
-			<h4>Rabbits ({{ rabbits.length }}) Array:</h4>
-			<button @click="removeAllRabbits">Remove All Rabbits</button>
-			<details>
-				<summary>View JSON Array:</summary>
-				<pre><code>{{ rabbits }}</code></pre>
-			</details>
-		</aside>
+		<p>Click to spawn a rabbit, right click to despawn! (Max 100)<button @click="removeAllRabbits">Remove All Rabbits</button></p>
 		<div style="display: flex; flex-direction: row">
 			<div
 				class="spawnField"
