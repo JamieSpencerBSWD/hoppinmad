@@ -33,6 +33,7 @@ export type Rabbit = {
 	positionX: number; // X position (initial from mouse, updated when applying gravity or whatever)
 	positionY: number; // Y position (initial from mouse, updated when applying gravity or whatever)
 	fieldHeight: number;
+	fieldWidth: number;
 	velocityX: number; // Velocity of the rabbit on the X Axis. 0 for now
 	velocityY: number; // Velocity of the rabbit on the Y Axis. 0 for now
 	speed: number; // Should be a calculation based on velocity and gravity maybe?
@@ -58,7 +59,7 @@ const gravityTick = () => {
 };
 requestAnimationFrame(gravityTick);
 
-export const addRabbit = (x: number, y: number, fieldHeight: number) => {
+export const addRabbit = (x: number, y: number, fieldHeight: number, fieldWidth: number) => {
 	if(canSpawn.value == true && rabbits.value.length <= 100){
 		rabbits.value.push({
 			id: nextRabbitId++,
@@ -69,6 +70,7 @@ export const addRabbit = (x: number, y: number, fieldHeight: number) => {
 			positionX: x,
 			positionY: y,
 			fieldHeight: fieldHeight,
+			fieldWidth: fieldWidth,
 			velocityX: 0,
 			velocityY: 0,
 			speed: 0,

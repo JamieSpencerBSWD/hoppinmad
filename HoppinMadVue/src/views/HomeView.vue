@@ -9,6 +9,7 @@ import { mousePosition } from '@/models/mouse';
 const hover = ref(false);
 const spawnField = useTemplateRef('spawnField');
 let fieldHeight: number | null | undefined = null;
+let fieldWidth: number | null | undefined = null;
 
 const handleMouseMove = (event: MouseEvent) => {
 	hover.value = true;
@@ -24,6 +25,7 @@ const handleMouseMove = (event: MouseEvent) => {
 
 onMounted(() => {
 	fieldHeight = spawnField.value?.offsetHeight;
+	fieldWidth = spawnField.value?.offsetWidth;
 });
 
 //chatgpt shit
@@ -39,7 +41,7 @@ onMounted(() => {
 });
 
 const spawnRabbit = () => {
-	if (!draggedRabbit.value) {addRabbit(mousePosition.x, mousePosition.y, fieldHeight ? fieldHeight: 0)}
+	if (!draggedRabbit.value) {addRabbit(mousePosition.x, mousePosition.y, fieldHeight ? fieldHeight: 0, fieldWidth ? fieldWidth: 0)}
 }
 
 </script>
