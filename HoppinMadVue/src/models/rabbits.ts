@@ -37,6 +37,9 @@ export type Rabbit = {
 	velocityY: number; // Velocity of the rabbit on the Y Axis. 0 for now
 	speed: number; // Should be a calculation based on velocity and gravity maybe?
 	size: number; // should be square. width and height would use this.
+	lastX: number;
+	lastY: number;
+	lastTime: number;
 };
 
 const retrievedStorage = localStorage.getItem('rabbitsLS');
@@ -70,6 +73,9 @@ export const addRabbit = (x: number, y: number, fieldHeight: number) => {
 			velocityY: 0,
 			speed: 0,
 			size: 60,
+			lastX: x,	
+			lastY: y,
+			lastTime: performance.now(),
 		});
 	}
 	
