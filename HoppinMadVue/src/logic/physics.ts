@@ -12,7 +12,7 @@ export const updateRabbitPosition = (rabbit: Rabbit, x: number, y: number) => {
 	rabbit.positionX = x;
 	rabbit.positionY = y;
 
-	updateVelocity(rabbit, rabbit.positionX, rabbit.positionY);
+	//updateVelocity(rabbit, rabbit.positionX, rabbit.positionY);
 	localStorage.setItem('rabbitsLS', JSON.stringify(rabbits.value));
 };
 
@@ -21,11 +21,12 @@ export const Gravity = () => {
 		if (rabbit.isDragged) return; // don’t touch dragged rabbits
 
 		// apply velocity and update rabbit position
+		//Apply Gravity
 		rabbit.positionX += rabbit.velocityX * deltaTime;
 		rabbit.positionY += rabbit.velocityY * deltaTime;
 
 		// check collissions here
-		checkCollissions(rabbit);
+		//checkCollissions(rabbit);
 
 		// gravity affects Y velocity (apply gravity)
 		rabbit.velocityY += gravity * deltaTime;
@@ -89,7 +90,12 @@ export const dragItem = () => {
 };
 
 function updateVelocity(rabbit: Rabbit, currentX: number, currentY: number) {
+	//CALCULATE THE VELOCITY HERE
+	//To do that, we need to calculate the starting position, current position, velocity, direction, and speed
+
+	//if the rabbit is being dragged, then stop everything.
 	if (!rabbit.isDragged) return;
+	
 	const currentTime = performance.now();
 	// Calculate the change in position
 	const distanceX = currentX - rabbit.lastX;
