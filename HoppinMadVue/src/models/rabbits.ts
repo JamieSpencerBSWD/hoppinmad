@@ -1,6 +1,8 @@
 import { ref } from 'vue';
 
-import { dragItem, Gravity, updateRabbitPosition } from '@/logic/physics copy';
+import { dragItem, 
+	//Gravity, 
+	updateRabbitPosition } from '@/logic/physics copy';
 import { mousePosition } from '@/models/mouse';
 //Add Gravity and Dragging logic here!
 // What does a rabbit look like?
