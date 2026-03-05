@@ -5,7 +5,7 @@ import RabbitViewer from '@/components/RabbitViewer.vue';
 import { onMounted, ref, useTemplateRef } from 'vue';
 
 import { mousePosition } from '@/models/mouse';
-
+const spawning = ref(false);
 const hover = ref(false);
 const spawnField = useTemplateRef('spawnField');
 let fieldHeight: number | null | undefined = null;
@@ -44,11 +44,39 @@ const spawnRabbit = () => {
 	if (!draggedRabbit.value) {addRabbit(mousePosition.x, mousePosition.y, fieldHeight ? fieldHeight: 0, fieldWidth ? fieldWidth: 0)}
 }
 
+function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+const spawnRandomly = async () => {
+	spawning.value = !spawning.value
+		// for (let i = 0; i < 1000; i++) {
+		// 	await sleep(50)
+		// 	if (spawning.value == true) {
+				
+		// 		addRabbit(Math.floor(Math.random() * (fieldWidth ? fieldWidth : 1500)), Math.floor(Math.random() * (fieldHeight ? fieldHeight : 1000)), fieldHeight ? fieldHeight: 0, fieldWidth ? fieldWidth: 0)
+		// 	}else{
+		// 		i = 0
+		// 	}
+		// }
+		while (spawning.value == true) {
+			await sleep(2)
+			if (spawning.value == true) {
+				
+				addRabbit(Math.floor(Math.random() * (fieldWidth ? fieldWidth : 1500)), Math.floor(Math.random() * (fieldHeight ? fieldHeight : 1000)), fieldHeight ? fieldHeight: 0, fieldWidth ? fieldWidth: 0)
+			}
+		}
+}
+
 </script>
 
 <template>
 	<main>
-		<p>Click to spawn a rabbit, right click to despawn! (Max 100)<button @click="removeAllRabbits">Remove All Rabbits</button></p>
+		<p>Click to spawn a rabbit, right click to despawn! (Max 100)</p>
+		<p><button @click="removeAllRabbits">Remove All Rabbits</button>	<button @click="spawnRandomly">{{ spawning === true ? "Stop" : "Start" }} Spawning</button> Spawns two rabbits per second</p>
+		<p>
+			{{ rabbits.length }} rabbits spawned
+		</p>
 		<details>
 					<summary>View JSON Array:</summary>
 					<pre><code>{{ rabbits }}</code></pre>

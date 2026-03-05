@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 
-import { dragItem, updateRabbitPosition } from '@/logic/physics copy';
+import { dragItem, Gravity, updateRabbitPosition } from '@/logic/physics copy';
 import { mousePosition } from '@/models/mouse';
 //Add Gravity and Dragging logic here!
 // What does a rabbit look like?
@@ -52,14 +52,17 @@ export const rabbits = ref<Rabbit[]>(localStorageArray ? localStorageArray : [])
 
 
 // Applies gravity to each rabbit in the array on every re-render
-const gravityTick = () => {
+const tick = () => {
+	//Gravity();
 	dragItem()
-	requestAnimationFrame(gravityTick);
+	requestAnimationFrame(tick);
 };
-requestAnimationFrame(gravityTick);
+requestAnimationFrame(tick);
 
 export const addRabbit = (x: number, y: number, fieldHeight: number, fieldWidth: number) => {
-	if(canSpawn.value == true && rabbits.value.length <= 100){
+	if(canSpawn.value == true 
+		//&& rabbits.value.length <= 100
+	){
 		rabbits.value.push({
 			id: nextRabbitId++,
 			name: '',
