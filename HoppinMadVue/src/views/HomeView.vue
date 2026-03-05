@@ -49,7 +49,10 @@ const spawnRabbit = () => {
 <template>
 	<main>
 		<p>Click to spawn a rabbit, right click to despawn! (Max 100)<button @click="removeAllRabbits">Remove All Rabbits</button></p>
-		<div style="display: flex; flex-direction: row">
+		<details>
+					<summary>View JSON Array:</summary>
+					<pre><code>{{ rabbits }}</code></pre>
+				</details><div style="display: flex; flex-direction: row">
 			<div
 				class="spawnField"
 				id="spawnField"
@@ -58,10 +61,12 @@ const spawnRabbit = () => {
 				@mousemove.capture.self="handleMouseMove"
 				@mouseleave="hover = false"
 			>
+			
 				<div
 					v-for="(rabbit, index) in rabbits"
 					:key="index"
 				>
+				
 					<!-- <RabbitEditor v-model="rabbits[index]!" /> -->
 					<!-- Set to click.right.prevent to set it to delete on right click, 
 							and prevent the default action(opening context menu) -->
